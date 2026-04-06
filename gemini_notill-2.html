@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notill Co. | Clinical Workspace V2.1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ==========================================================================
+           VARIABLES & RESET
+           ========================================================================== */
+        :root {
+            --primary: #0f172a;       
+            --primary-light: #334155; 
+            --accent: #2563eb;        
+            --accent-hover: #1d4ed8;  
+            --accent-light: #eff6ff;  
+            --bg-app: #f8fafc;        
+            --surface: #ffffff;       
+            --border: #e2e8f0;        
+            
+            --text-main: #1e293b;     
+            --text-muted: #64748b;    
+            --success: #10b981;       
+            --success-bg: #ecfdf5;
+            --warning: #f59e0b;       
+            --warning-bg: #fffbeb;
+            --danger: #ef4444;        
+            --danger-bg: #fef2f2;
+            --outreach: #9333ea;      
+            --outreach-bg: #faf5ff;   
+            --iot: #0891b2;           
+            --iot-bg: #ecfeff;
+            
+            --sidebar-width: 260px;
+            --header-height: 72px;
+            --border-radius: 12px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px; line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        button { cursor: pointer; font-family: inherit; }
+
+        /* ==========================================================================
+           UTILITIES & COMPONENTS
+           ========================================================================== */
+        .card {
+            background-color: var(--surface); border-radius: var(--border-radius);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm); padding: 24px;
+        }
+        .btn {
+            align-items: center; border-radius: 8px; border: 1px solid transparent;
+            display: inline-flex; font-size: 14px; font-weight: 500; gap: 8px;
+            justify-content: center; padding: 10px 16px; transition: all 0.2s;
+        }
+        .btn-primary { background-color: var(--accent); color: white; }
+        .btn-primary:hover { background-color: var(--accent-hover); }
+        .btn-secondary { background-color: var(--surface); border-color: var(--border); color: var(--text-main); }
+        .btn-secondary:hover { background-color: var(--bg-app); }
+        .btn-icon { background: none; border: none; color: var(--text-muted); font-size: 16px; padding: 4px; border-radius: 4px; }
+        .btn-icon:hover { background-color: var(--border); color: var(--text-main); }
+
+        .badge {
+            border-radius: 20px; font-size: 12px; font-weight: 600; padding: 4px 10px;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .badge.danger { background-color: var(--danger-bg); color: var(--danger); }
+        .badge.success { background-color: var(--success-bg); color: var(--success); }
+        .badge.warning { background-color: var(--warning-bg); color: var(--warning); }
+        .badge.outreach { background-color: var(--outreach-bg); color: var(--outreach); border: 1px solid #e9d5ff; }
+        .badge.iot { background-color: var(--iot-bg); color: var(--iot); border: 1px solid #cffafe; }
+
+        /* ==========================================================================
+           APP LAYOUT SHELL & LOGIN
+           ========================================================================== */
+        /* Login View */
+        #login-view {
+            display: flex; height: 100vh; width: 100vw;
+        }
+        .login-left {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover; background-position: center; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px; color: white;
+        }
+        .login-right {
+            align-items: center; background-color: var(--surface); display: flex; flex-direction: column; justify-content: center; width: 500px; padding: 40px;
+        }
+        .login-box { width: 100%; max-width: 360px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        .form-group input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 15px; background-color: var(--bg-app); }
+
+        /* Main App Container (Hidden initially) */
+        #app-container { display: none; height: 100vh; width: 100vw; overflow: hidden; } 
+
+        .sidebar {
+            background-color: var(--surface); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; height: 100vh; left: 0; position: fixed; top: 0;
+            width: var(--sidebar-width); z-index: 40;
+        }
+        .sidebar-header { align-items: center; display: flex; height: var(--header-height); padding: 0 24px; border-bottom: 1px solid var(--border); }
+        .brand-logo { color: var(--accent); font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .sidebar-nav { padding: 24px 16px; flex-grow: 1; display: flex; flex-direction: column; }
+        .nav-item {
+            align-items: center; border-radius: 8px; color: var(--text-muted); display: flex; font-weight: 500;
+            gap: 12px; margin-bottom: 4px; padding: 12px 16px; transition: all 0.2s; cursor: pointer;
+        }
+        .nav-item:hover { background-color: var(--bg-app); color: var(--text-main); }
+        .nav-item.active { background-color: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+        .main-wrapper { display: flex; flex-direction: column; height: 100vh; margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); }
+
+        /* TOP HEADER */
+        .top-header {
+            align-items: center; background-color: var(--surface); border-bottom: 1px solid var(--border);
+            display: flex; height: var(--header-height); justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 30;
+        }
+        
+        .search-container { position: relative; }
+        .search-bar {
+            align-items: center; background-color: var(--bg-app); border-radius: 8px; border: 1px solid var(--border);
+            color: var(--text-muted); display: flex; padding: 8px 16px; width: 450px; transition: border-color 0.2s;
+        }
+        .search-bar:focus-within { border-color: var(--accent); background-color: var(--surface); box-shadow: 0 0 0 3px var(--accent-light); }
+        .search-bar input { background: transparent; border: none; color: var(--text-main); flex-grow: 1; font-family: inherit; font-size: 14px; margin-left: 10px; outline: none; }
+        
+        .predictive-dropdown {
+            position: absolute; top: 100%; left: 0; width: 100%; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; margin-top: 8px; box-shadow: var(--shadow-lg); z-index: 50; display: none; overflow: hidden;
+        }
+        .search-container:focus-within .predictive-dropdown { display: block; }
+        .pred-section { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .pred-section:last-child { border-bottom: none; }
+        .pred-title { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+        .pred-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .pred-item:hover { background-color: var(--bg-app); }
+        .pred-item-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+        .pred-item-icon.doc { background: #fef2f2; color: #ef4444; }
+        .pred-item-icon.cmd { background: #f3e8ff; color: #9333ea; font-family: monospace; font-weight: bold; }
+
+        .header-actions { align-items: center; display: flex; gap: 24px; }
+        .sync-status { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--success); padding: 6px 12px; background: var(--success-bg); border-radius: 20px; }
+        .sync-status i { animation: pulse 2s infinite; }
+        
+        .icon-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; position: relative; }
+        .icon-btn .indicator { background-color: var(--danger); border-radius: 50%; height: 8px; position: absolute; right: -2px; top: -2px; width: 8px; }
+        .user-profile { align-items: center; display: flex; gap: 12px; cursor: pointer; }
+        .avatar { align-items: center; background-color: var(--accent-light); border-radius: 50%; color: var(--accent); display: flex; font-weight: 600; height: 36px; justify-content: center; width: 36px; }
+
+        .content-scroll { flex-grow: 1; overflow-y: auto; padding: 32px; position: relative; }
+        .view-panel { display: none; animation: fadeIn 0.3s ease; }
+        .view-panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .view-title { font-size: 28px; font-weight: 600; margin-bottom: 24px; color: var(--primary); }
+
+        /* ==========================================================================
+           1. DASHBOARD VIEW 
+           ========================================================================== */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+        .metrics-row { grid-column: span 12; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .metric-card { display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden; }
+        .metric-icon { align-items: center; border-radius: 12px; display: flex; font-size: 24px; height: 64px; justify-content: center; width: 64px; flex-shrink: 0; }
+        .metric-icon.danger { background: var(--danger-bg); color: var(--danger); }
+        .metric-icon.primary { background: var(--outreach-bg); color: var(--outreach); }
+        .metric-icon.success { background: var(--success-bg); color: var(--success); }
+        
+        .sparkline { width: 120px; height: 45px; }
+        .sparkline svg { width: 100%; height: 100%; overflow: visible; }
+        .spark-up { stroke: var(--danger); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round;}
+        .spark-flat { stroke: var(--text-muted); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .spark-down { stroke: var(--success); stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .spark-axis { stroke: var(--border); stroke-width: 1; stroke-dasharray: 2 2; }
+        .spark-label { font-family: 'Inter', sans-serif; font-size: 9px; fill: var(--text-muted); font-weight: 500; }
+        .spark-title { font-family: 'Inter', sans-serif; font-size: 9px; fill: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+
+        .dash-main { grid-column: span 8; }
+        .dash-side { grid-column: span 4; }
+
+        .alert-item { border-left: 4px solid var(--danger); background-color: var(--danger-bg); padding: 16px; border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+        .iot-alert { border-left: 4px solid var(--iot); background-color: var(--iot-bg); padding: 16px; border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+
+        /* ==========================================================================
+           2. PATIENT DIRECTORY
+           ========================================================================== */
+        .directory-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+        .facet-sidebar { background: var(--surface); border-radius: var(--border-radius); border: 1px solid var(--border); padding: 20px; }
+        .facet-group { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+        .facet-group:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+        .facet-header { font-size: 13px; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .facet-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; color: var(--text-main); cursor: pointer; }
+        .facet-item:hover { color: var(--accent); }
+        .facet-item input[type="checkbox"] { margin-right: 8px; accent-color: var(--accent); }
+        .facet-count { font-size: 12px; color: var(--text-muted); background: var(--bg-app); padding: 2px 6px; border-radius: 12px; }
+
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        .data-table th { color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; background-color: var(--bg-app); }
+        .data-table tbody tr:hover { background-color: var(--bg-app); }
+        
+        .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-top: 1px solid var(--border); background-color: var(--surface); border-radius: 0 0 var(--border-radius) var(--border-radius); }
+
+        /* ==========================================================================
+           3. PATIENT DETAIL VIEW (Expandable Data)
+           ========================================================================== */
+        .patient-detail-grid { display: grid; grid-template-columns: 280px 1fr 340px; gap: 24px; align-items: start; }
+
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 16px auto; border: 4px solid var(--bg-app); }
+        
+        /* Expandable Info List */
+        .patient-expanded-info { display: none; text-align: left; border-top: 1px solid var(--border); margin-top: 16px; padding-top: 16px; animation: fadeIn 0.2s ease; }
+        .info-row { margin-bottom: 12px; }
+        .info-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
+        .info-val { font-size: 13px; font-weight: 500; color: var(--text-main); }
+
+        .chrono-timeline { display: flex; align-items: center; gap: 16px; padding: 20px; overflow-x: auto; border-bottom: 1px solid var(--border); background: var(--surface); border-radius: var(--border-radius) var(--border-radius) 0 0; }
+        .chrono-node { display: flex; flex-direction: column; align-items: center; position: relative; min-width: 100px; z-index: 2; }
+        .chrono-node::before { content: ''; position: absolute; top: 12px; left: 50%; width: 100%; height: 2px; background: var(--border); z-index: -1; }
+        .chrono-node:last-child::before { display: none; }
+        .chrono-icon { width: 26px; height: 26px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-muted); margin-bottom: 8px; }
+        .chrono-node.completed .chrono-icon { background: var(--accent); border-color: var(--accent); color: white; }
+        .chrono-node.active .chrono-icon { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+        .chrono-date { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+        .chrono-desc { font-size: 12px; font-weight: 500; color: var(--primary); text-align: center; }
+
+        .pghd-widget { border: 1px solid var(--border); border-radius: 8px; margin-top: 24px; overflow: hidden; }
+        .pghd-header { background: var(--iot-bg); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #cffafe; }
+        .pghd-metric { padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+        .pghd-metric:last-child { border-bottom: none; }
+        .pghd-val { font-size: 24px; font-weight: 700; color: var(--primary); line-height: 1; }
+        .pghd-unit { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        .aci-sidebar { background: var(--surface); border-radius: var(--border-radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; height: calc(100vh - 140px); position: sticky; top: var(--header-height); }
+        .aci-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: linear-gradient(to right, #fdf4ff, #faf5ff); border-radius: var(--border-radius) var(--border-radius) 0 0; }
+        .aci-pulse { width: 12px; height: 12px; background: #c026d3; border-radius: 50%; animation: pulseScribe 1.5s infinite; }
+        @keyframes pulseScribe { 0% { box-shadow: 0 0 0 0 rgba(192, 38, 211, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(192, 38, 211, 0); } 100% { box-shadow: 0 0 0 0 rgba(192, 38, 211, 0); } }
+        
+        .aci-body { padding: 16px; flex-grow: 1; overflow-y: auto; background: var(--bg-app); }
+        .aci-transcript { font-size: 13px; color: var(--text-muted); font-style: italic; margin-bottom: 24px; position: relative; padding-left: 12px; border-left: 2px solid #e9d5ff; }
+        .aci-soap-block { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+        .aci-soap-label { font-size: 11px; font-weight: 700; color: #a21caf; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .aci-soap-content { font-size: 14px; color: var(--text-main); }
+        .aci-footer { padding: 16px; border-top: 1px solid var(--border); background: var(--surface); border-radius: 0 0 var(--border-radius) var(--border-radius); }
+
+        .clinical-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 24px; gap: 32px; padding: 0 24px; }
+        .tab-btn { background: none; border: none; padding: 16px 0; font-size: 14px; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent; }
+        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* ==========================================================================
+           4. AGENDA VIEW 
+           ========================================================================== */
+        .view-toggle-group { display: flex; background-color: var(--bg-app); border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
+        .view-toggle-btn { background: transparent; border: none; padding: 6px 16px; border-radius: 4px; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+        .view-toggle-btn.active { background-color: var(--surface); color: var(--primary); box-shadow: var(--shadow-sm); }
+        
+        .timeline-container { position: relative; padding-left: 30px; margin-top: 20px; }
+        .timeline-container::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background-color: var(--border); }
+        .timeline-event { position: relative; margin-bottom: 30px; }
+        .timeline-event::before { content: ''; position: absolute; left: -35px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background-color: var(--surface); border: 3px solid var(--border); }
+        .timeline-event.active::before { border-color: var(--accent); background-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-light); }
+        .event-time { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+        
+        .week-calendar-grid { display: grid; grid-template-columns: 80px repeat(5, 1fr); background-color: var(--border); gap: 1px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 20px; }
+        .cal-header-cell { background-color: var(--bg-app); padding: 12px; text-align: center; font-weight: 600; font-size: 13px; color: var(--text-main); }
+        .cal-time-cell { background-color: var(--surface); padding: 12px; font-size: 12px; color: var(--text-muted); text-align: right; border-right: 1px solid var(--border); }
+        .cal-day-cell { background-color: var(--surface); min-height: 80px; position: relative; padding: 4px; }
+        .cal-event { background-color: var(--accent-light); border-left: 3px solid var(--accent); border-radius: 4px; padding: 6px 8px; font-size: 12px; color: var(--accent-hover); margin-bottom: 4px; cursor: pointer; line-height: 1.2;}
+        .cal-event.urgent { background-color: var(--danger-bg); border-left-color: var(--danger); color: var(--danger); }
+        .cal-event.completed { background-color: var(--bg-app); border-left-color: var(--text-muted); color: var(--text-muted); }
+        .cal-event.outreach { background-color: var(--outreach-bg); border-left-color: var(--outreach); color: var(--outreach); }
+
+        /* ==========================================================================
+           5. POPULATION HEALTH VIEW
+           ========================================================================== */
+        .pop-health-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+        .campaign-card { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s;}
+        .campaign-card:hover { border-color: var(--accent); }
+        .campaign-card.active-campaign { border-color: var(--outreach); background-color: var(--surface); box-shadow: var(--shadow-sm); }
+        .progress-bar-bg { height: 6px; background-color: var(--bg-app); border-radius: 3px; width: 150px; overflow: hidden; margin-top: 8px; }
+        .progress-bar-fill { height: 100%; background-color: var(--outreach); border-radius: 3px; }
+
+        /* ==========================================================================
+           6. COHORT COMPARISON VIEW
+           ========================================================================== */
+        .comparison-layout { display: grid; grid-template-columns: 350px 1fr; gap: 24px; align-items: stretch; }
+        .cohort-stats { background-color: var(--bg-app); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .compare-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .compare-row:last-child { border-bottom: none; }
+        .svg-chart-container { width: 100%; height: auto; background-color: var(--surface); margin-bottom: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-view">
+        <div class="login-left">
+            <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 20px; line-height: 1.1;">Transforming the way<br>you deliver care.</h1>
+            <p style="font-size: 18px; opacity: 0.8; max-width: 500px;">Notill Co. provides predictive insights, seamless documentation, and comprehensive patient context—all in one clinical workspace.</p>
+        </div>
+        <div class="login-right">
+            <div class="login-box">
+                <div style="color: var(--accent); font-size: 40px; margin-bottom: 16px;"><i class="fa-solid fa-notes-medical"></i></div>
+                <h2 style="font-size: 24px; color: var(--primary); margin-bottom: 8px;">Welcome back</h2>
+                <p style="color: var(--text-muted); margin-bottom: 32px;">Please enter your practitioner credentials.</p>
+                
+                <div class="form-group">
+                    <label>Practitioner ID / Email</label>
+                    <input type="text" value="dr.elena.smith@notill.co" readonly>
+                </div>
+                <div class="form-group" style="margin-bottom: 32px;">
+                    <label>Secure Password</label>
+                    <input type="password" value="••••••••••••" readonly>
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="login()">
+                    Authenticate (SSO) <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo"><i class="fa-solid fa-notes-medical"></i> Notill Co.</div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-item active" onclick="switchView('dashboard-view', this)"><i class="fa-solid fa-house"></i> Dashboard</div>
+                <div class="nav-item" onclick="switchView('patients-view', this)"><i class="fa-solid fa-users"></i> Patient Directory</div>
+                <div class="nav-item" onclick="switchView('agenda-view', this)"><i class="fa-regular fa-calendar"></i> Daily Agenda</div>
+                <div class="nav-item" onclick="switchView('population-health-view', this)"><i class="fa-solid fa-chart-line"></i> Population Health</div>
+                <div class="nav-item"><i class="fa-solid fa-file-invoice-dollar"></i> Billing & Claims</div>
+                
+                <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border);">
+                    <div class="nav-item" style="margin: 0;"><i class="fa-solid fa-gear"></i> Settings</div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-wrapper">
+            
+            <header class="top-header">
+                
+                <div class="search-container">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" placeholder="Search patients, labs, or commands...">
+                        <button class="btn-icon" title="Scan Patient Wristband or Meds"><i class="fa-solid fa-barcode"></i></button>
+                    </div>
+                    
+                    <div class="predictive-dropdown">
+                        <div class="pred-section">
+                            <div class="pred-title">Recent Patients</div>
+                            <div class="pred-item" onclick="goToPatientDetail()">
+                                <div class="pred-item-icon"><i class="fa-solid fa-user"></i></div>
+                                <div><div style="font-size: 14px; font-weight: 600;">Samwise Gamgee</div><div style="font-size: 12px; color: var(--text-muted);">MRN-9281 • DOB: 04/28/1958</div></div>
+                            </div>
+                            <div class="pred-item">
+                                <div class="pred-item-icon"><i class="fa-solid fa-user"></i></div>
+                                <div><div style="font-size: 14px; font-weight: 600;">Robert Taylor</div><div style="font-size: 12px; color: var(--text-muted);">MRN-4420 • DOB: 11/15/1960</div></div>
+                            </div>
+                        </div>
+                        <div class="pred-section">
+                            <div class="pred-title">Recent Documents</div>
+                            <div class="pred-item">
+                                <div class="pred-item-icon doc"><i class="fa-solid fa-file-pdf"></i></div>
+                                <div><div style="font-size: 14px; font-weight: 600;">Lab Results: Basic Metabolic Panel</div><div style="font-size: 12px; color: var(--text-muted);">MRN-9281 • Uploaded Today</div></div>
+                            </div>
+                            <div class="pred-item">
+                                <div class="pred-item-icon doc"><i class="fa-solid fa-file-waveform"></i></div>
+                                <div><div style="font-size: 14px; font-weight: 600;">ECG Report: Resting</div><div style="font-size: 12px; color: var(--text-muted);">MRN-4420 • Uploaded Yesterday</div></div>
+                            </div>
+                        </div>
+                        <div class="pred-section">
+                            <div class="pred-title">Commands</div>
+                            <div class="pred-item">
+                                <div class="pred-item-icon cmd">/</div>
+                                <div><div style="font-size: 14px; font-weight: 600;">/prescribe</div><div style="font-size: 12px; color: var(--text-muted);">Initiate new e-prescription workflow</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <div class="sync-status">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Delta-Sync Online
+                    </div>
+                    <button class="icon-btn"><i class="fa-regular fa-bell"></i><span class="indicator"></span></button>
+                    <div class="user-profile">
+                        <div class="avatar">ES</div>
+                        <div>
+                            <div style="font-size: 14px; font-weight: 600; color: var(--primary);">Dr. Elena Smith</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Internal Medicine</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: var(--text-muted);"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-scroll">
+                
+                <div id="dashboard-view" class="view-panel active">
+                    <h1 class="view-title">Good morning, Dr. Elena</h1>
+                    
+                    <div class="dashboard-grid">
+                        <div class="metrics-row">
+                            <div class="card metric-card">
+                                <div class="metric-icon danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                                <div style="flex-grow: 1;">
+                                    <div style="font-size: 32px; font-weight: 700; line-height: 1;">4</div>
+                                    <div style="font-weight: 500; color: var(--text-main);">Action Required</div>
+                                </div>
+                                <div class="sparkline">
+                                    <svg viewBox="0 0 120 45">
+                                        <title>72h Trend</title>
+                                        <line x1="0" y1="36" x2="120" y2="36" class="spark-axis" />
+                                        <polyline class="spark-up" points="0,30 30,30 60,24 90,12 120,6" />
+                                        <text x="0" y="45" class="spark-label">-72h</text>
+                                        <text x="102" y="45" class="spark-label">Now</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <div class="card metric-card">
+                                <div class="metric-icon success"><i class="fa-solid fa-check-double"></i></div>
+                                <div style="flex-grow: 1;">
+                                    <div style="font-size: 32px; font-weight: 700; line-height: 1;">8</div>
+                                    <div style="font-weight: 500; color: var(--text-main);">Unsigned Notes</div>
+                                </div>
+                                <div class="sparkline">
+                                    <svg viewBox="0 0 120 45">
+                                        <title>72h Trend</title>
+                                        <line x1="0" y1="36" x2="120" y2="36" class="spark-axis" />
+                                        <polyline class="spark-down" points="0,6 30,12 60,18 90,30 120,30" />
+                                        <text x="0" y="45" class="spark-label">-72h</text>
+                                        <text x="102" y="45" class="spark-label">Now</text>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="card metric-card">
+                                <div class="metric-icon primary"><i class="fa-solid fa-user-clock"></i></div>
+                                <div style="flex-grow: 1;">
+                                    <div style="font-size: 32px; font-weight: 700; line-height: 1;">12</div>
+                                    <div style="font-weight: 500; color: var(--text-main);">Patients Today</div>
+                                </div>
+                                <div class="sparkline">
+                                    <svg viewBox="0 0 120 45">
+                                        <title>72h Trend</title>
+                                        <line x1="0" y1="36" x2="120" y2="36" class="spark-axis" />
+                                        <polyline class="spark-flat" points="0,18 30,14.4 60,18 90,21.6 120,18" />
+                                        <text x="0" y="45" class="spark-label">-72h</text>
+                                        <text x="102" y="45" class="spark-label">Now</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card dash-main">
+                            <h3 style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+                                Priority Queue
+                                <a href="#" style="font-size: 14px; color: var(--accent); font-weight: 500;">Filter Queue</a>
+                            </h3>
+                            
+                            <div class="iot-alert">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <strong>Sarah Jenkins (MRN-1102)</strong>
+                                    <span class="badge iot"><i class="fa-brands fa-apple"></i> Apple Watch Alert</span>
+                                </div>
+                                <p style="font-size: 14px; margin-bottom: 8px;"><strong>FHIR Observation:</strong> Sustained elevated resting heart rate (98 bpm) detected while patient is asleep. Deviation from baseline.</p>
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;">Review PGHD Data</button>
+                            </div>
+
+                            <div class="alert-item">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <strong>Samwise Gamgee (MRN-9281)</strong>
+                                    <span class="badge danger">Critical Lab</span>
+                                </div>
+                                <p style="font-size: 14px; margin-bottom: 8px;">Potassium levels (5.8 mEq/L) indicate hyperkalemia. Patient is currently prescribed Lisinopril 20mg.</p>
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="goToPatientDetail()">Review Record</button>
+                            </div>
+                        </div>
+
+                        <div class="card dash-side">
+                            <h3 style="margin-bottom: 20px;">Up Next</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 12px;">
+                                <div>
+                                    <div style="color: var(--accent); font-weight: 600; font-size: 14px;">09:00 AM</div>
+                                    <div style="font-weight: 500;">Samwise Gamgee</div>
+                                </div>
+                                <span class="badge warning" style="background: var(--bg-app); border: 1px solid var(--border);">Waiting</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="color: var(--text-muted); font-weight: 600; font-size: 14px;">09:45 AM</div>
+                                    <div style="font-weight: 500;">Robert Taylor</div>
+                                </div>
+                                <span class="badge" style="background: var(--bg-app); border: 1px solid var(--border);">Scheduled</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="patients-view" class="view-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h1 class="view-title" style="margin: 0;">Patient Directory</h1>
+                        <button class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Register Patient</button>
+                    </div>
+
+                    <div class="directory-layout">
+                        <aside class="facet-sidebar">
+                            <div class="facet-group">
+                                <div class="facet-header">Demographics</div>
+                                <label class="facet-item"><div><input type="checkbox"> Age < 18</div> <span class="facet-count">245</span></label>
+                                <label class="facet-item"><div><input type="checkbox"> Age 18 - 64</div> <span class="facet-count">847</span></label>
+                                <label class="facet-item"><div><input type="checkbox" checked> Age 65+</div> <span class="facet-count">310</span></label>
+                            </div>
+                            <div class="facet-group">
+                                <div class="facet-header">Care Programs</div>
+                                <label class="facet-item"><div><input type="checkbox"> Diabetes Mgmt</div> <span class="facet-count">142</span></label>
+                                <label class="facet-item"><div><input type="checkbox" checked> Hypertension</div> <span class="facet-count">89</span></label>
+                                <label class="facet-item"><div><input type="checkbox"> Post-Op Care</div> <span class="facet-count">12</span></label>
+                            </div>
+                            <div class="facet-group">
+                                <div class="facet-header">Latest Vitals</div>
+                                <label class="facet-item"><div><input type="checkbox" checked> Potassium > 5.0</div> <span class="facet-count">3</span></label>
+                                <label class="facet-item"><div><input type="checkbox"> HbA1c > 8.0%</div> <span class="facet-count">24</span></label>
+                            </div>
+                        </aside>
+
+                        <div class="card" style="padding: 0;">
+                            <div style="padding: 16px 24px; border-bottom: 1px solid var(--border); background-color: var(--bg-app); display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); margin-right: 8px;">Active Filters:</span>
+                                <div class="badge" style="background: var(--accent-light); color: var(--accent); padding: 6px 12px; font-size: 13px;">Age 65+ <i class="fa-solid fa-xmark" style="margin-left: 4px; cursor: pointer;"></i></div>
+                                <div class="badge" style="background: var(--accent-light); color: var(--accent); padding: 6px 12px; font-size: 13px;">Hypertension <i class="fa-solid fa-xmark" style="margin-left: 4px; cursor: pointer;"></i></div>
+                                <div class="badge" style="background: var(--accent-light); color: var(--accent); padding: 6px 12px; font-size: 13px;">Potassium > 5.0 <i class="fa-solid fa-xmark" style="margin-left: 4px; cursor: pointer;"></i></div>
+                                <span style="margin-left: auto; font-size: 12px; color: var(--text-muted); cursor: pointer;">Clear All</span>
+                            </div>
+                            
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Patient ID</th>
+                                        <th>Full Name</th>
+                                        <th>DOB (Age)</th>
+                                        <th>Condition</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background: var(--danger-bg);">
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-9281</td>
+                                        <td style="font-weight: 600; color: var(--primary);">Samwise Gamgee</td>
+                                        <td>04/28/1958 (68)</td>
+                                        <td>Hypertension Stage 2</td>
+                                        <td><span class="badge danger">Action Req.</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary" onclick="goToPatientDetail()">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-1193</td>
+                                        <td style="font-weight: 500;">William Harris</td>
+                                        <td>02/03/1955 (71)</td>
+                                        <td>Hyperkalemia History</td>
+                                        <td><span class="badge success">Stable</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-4420</td>
+                                        <td style="font-weight: 500;">Robert Taylor</td>
+                                        <td>11/15/1960 (65)</td>
+                                        <td>Chronic Hypertension</td>
+                                        <td><span class="badge success">Stable</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-8821</td>
+                                        <td style="font-weight: 500;">Jane Doe</td>
+                                        <td>05/12/1956 (70)</td>
+                                        <td>Hypertension</td>
+                                        <td><span class="badge warning">Review Labs</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-3301</td>
+                                        <td style="font-weight: 500;">Eleanor Rigby</td>
+                                        <td>08/22/1950 (75)</td>
+                                        <td>Hypertension, Type 2 Diab.</td>
+                                        <td><span class="badge outreach">Outreach Due</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-1102</td>
+                                        <td style="font-weight: 500;">Sarah Jenkins</td>
+                                        <td>12/04/1958 (67)</td>
+                                        <td>Hypertension</td>
+                                        <td><span class="badge iot"><i class="fa-brands fa-apple"></i> IoT Alert</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-5543</td>
+                                        <td style="font-weight: 500;">Arthur Pendelton</td>
+                                        <td>02/10/1945 (81)</td>
+                                        <td>Hypertension Stage 1</td>
+                                        <td><span class="badge success">Stable</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-9012</td>
+                                        <td style="font-weight: 500;">Martha Stewart</td>
+                                        <td>07/18/1952 (73)</td>
+                                        <td>Hypertension</td>
+                                        <td><span class="badge success">Stable</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-2211</td>
+                                        <td style="font-weight: 500;">James Gordon</td>
+                                        <td>03/30/1959 (67)</td>
+                                        <td>Hypertension History</td>
+                                        <td><span class="badge warning">Check BP</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent); font-weight: 600;">MRN-7734</td>
+                                        <td style="font-weight: 500;">Linda Carter</td>
+                                        <td>10/10/1960 (65)</td>
+                                        <td>Hypertension</td>
+                                        <td><span class="badge success">Stable</span></td>
+                                        <td style="text-align: right;"><button class="btn btn-secondary">View Record</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div class="pagination-container">
+                                <span style="font-size: 13px; color: var(--text-muted);">Showing 1 to 10 of 1,402 entries</span>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px; opacity: 0.5; cursor: not-allowed;">Previous</button>
+                                    <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">1</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">2</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">3</button>
+                                    <span style="align-self: flex-end; color: var(--text-muted);">...</span>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">141</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="patient-detail-view" class="view-panel">
+                    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                        <button class="btn btn-secondary" style="padding: 8px;" onclick="switchView('patients-view')"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h1 class="view-title" style="margin: 0;">Workspace: Samwise Gamgee</h1>
+                        <span class="badge danger">High Risk Alert</span>
+                        
+                        <button class="btn btn-primary" style="margin-left: auto;" onclick="goToComparisonView()">
+                            <i class="fa-solid fa-chart-pie"></i> Compare Cohort
+                        </button>
+                    </div>
+
+                    <div class="patient-detail-grid">
+                        
+                        <div>
+                            <div class="card" style="text-align: center; margin-bottom: 24px;">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=300" alt="Patient" class="profile-avatar">
+                                <h2 style="font-size: 18px; color: var(--primary);">Samwise Gamgee</h2>
+                                <p style="color: var(--text-muted); font-size: 13px;">MRN-9281 • Male • 68 yrs</p>
+                                
+                                <button class="btn btn-secondary" id="btn-toggle-details" onclick="togglePatientDetails()" style="width: 100%; margin-top: 16px; font-size: 12px; padding: 6px;">
+                                    Show Details <i class="fa-solid fa-chevron-down" style="margin-left: 4px;"></i>
+                                </button>
+                                
+                                <div class="patient-expanded-info" id="patient-expanded-details">
+                                    <div class="info-row">
+                                        <div class="info-label">Date of Birth</div>
+                                        <div class="info-val">April 28, 1958</div>
+                                    </div>
+                                    <div class="info-row">
+                                        <div class="info-label">Contact</div>
+                                        <div class="info-val">(555) 123-4567<br>samwise.g@example.com</div>
+                                    </div>
+                                    <div class="info-row">
+                                        <div class="info-label">Allergies</div>
+                                        <div class="info-val" style="color: var(--danger);">Penicillin</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pghd-widget">
+                                <div class="pghd-header">
+                                    <span style="font-size: 12px; font-weight: 700; color: var(--iot); text-transform: uppercase;"><i class="fa-solid fa-satellite-dish"></i> Connected Devices</span>
+                                    <span class="badge" style="background: white; color: var(--iot); font-size: 10px;">Live</span>
+                                </div>
+                                <div class="pghd-metric">
+                                    <div>
+                                        <div style="font-size: 12px; font-weight: 600; color: var(--text-muted);"><i class="fa-brands fa-apple"></i> Watch HR</div>
+                                        <div class="pghd-val">72 <span class="pghd-unit">bpm</span></div>
+                                    </div>
+                                    <div style="width: 60px; height: 30px;">
+                                        <svg viewBox="0 0 60 30"><polyline stroke="var(--iot)" stroke-width="2" fill="none" points="0,15 10,15 15,5 20,25 25,15 60,15" /></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="padding: 0; display: flex; flex-direction: column; min-height: 700px;">
+                            <div class="chrono-timeline">
+                                <div class="chrono-node completed"><div class="chrono-icon"><i class="fa-solid fa-check"></i></div><div class="chrono-date">Jan 12</div><div class="chrono-desc">Routine Visit</div></div>
+                                <div class="chrono-node completed"><div class="chrono-icon"><i class="fa-solid fa-vial"></i></div><div class="chrono-date">Mar 28</div><div class="chrono-desc">Lab Ordered</div></div>
+                                <div class="chrono-node completed"><div class="chrono-icon" style="background: var(--danger-bg); border-color: var(--danger); color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="chrono-date">Apr 2</div><div class="chrono-desc" style="color: var(--danger);">Critical Result</div></div>
+                                <div class="chrono-node active"><div class="chrono-icon"><i class="fa-solid fa-user-doctor"></i></div><div class="chrono-date">Today</div><div class="chrono-desc">Urgent Consult</div></div>
+                            </div>
+                            <div class="clinical-tabs">
+                                <button class="tab-btn active">Active Note</button>
+                                <button class="tab-btn">Lab Reports</button>
+                                <button class="tab-btn">Medications</button>
+                            </div>
+                            <div style="padding: 24px; flex-grow: 1;">
+                                <div style="background: var(--danger-bg); border-left: 4px solid var(--danger); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                                    <strong style="color: var(--danger); display: block; margin-bottom: 4px;">Clinical Decision Support Context</strong>
+                                    <p style="font-size: 14px; margin: 0;">Potassium 5.8 mEq/L indicates hyperkalemia. High risk interaction with active Lisinopril 20mg prescription.</p>
+                                </div>
+                                <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--primary);">Clinical Workspace</h3>
+                                <p style="font-size: 14px; color: var(--text-muted);">Focus on the patient. The Ambient Scribe (right panel) is actively drafting your note.</p>
+                            </div>
+                        </div>
+
+                        <aside class="aci-sidebar">
+                            <div class="aci-header">
+                                <div class="aci-pulse"></div>
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 700; color: #a21caf;">Ambient Scribe Active</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Auto-extracting SOAP & Codes</div>
+                                </div>
+                            </div>
+                            <div class="aci-body">
+                                <div class="aci-transcript">"...yes doctor, I've been feeling incredibly tired the last two weeks. Just walking up the stairs is exhausting. No chest pain though..."</div>
+                                <div class="aci-soap-block">
+                                    <div class="aci-soap-label">Subjective</div>
+                                    <div class="aci-soap-content">Patient reports worsening fatigue over 2 weeks. Exertional exhaustion. Denies chest pain.</div>
+                                </div>
+                                <div class="aci-soap-block" style="border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light);">
+                                    <div class="aci-soap-label">Suggested Assessment/Plan</div>
+                                    <div class="aci-soap-content">
+                                        1. Hyperkalemia, likely drug-induced (Lisinopril).<br>
+                                        <span style="display: inline-block; background: var(--bg-app); padding: 4px 8px; border-radius: 4px; margin-top: 8px; font-size: 12px; border: 1px dashed var(--accent);">
+                                            <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent);"></i> AI Suggestion: D/C Lisinopril, start Amlodipine. Order ECG.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aci-footer"><button class="btn btn-primary" style="width: 100%;">Review & Sign Note</button></div>
+                        </aside>
+                    </div>
+                </div>
+
+                <div id="comparison-view" class="view-panel">
+                    <div class="patient-header-bar" style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                        <button class="btn btn-secondary" style="padding: 8px;" onclick="goToPatientDetail()">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <h1 class="view-title" style="margin: 0;">Cohort Analysis: Hyperkalemia Risk</h1>
+                        <span class="badge" style="background: var(--border); color: var(--text-main); margin-left: 12px;"><i class="fa-solid fa-users"></i> Cohort Size: 142 Patients</span>
+                    </div>
+
+                    <div class="comparison-layout">
+                        <div class="card" style="padding: 24px;">
+                            <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--primary);">Patient vs. Cohort Baseline</h3>
+                            
+                            <div class="compare-row">
+                                <span style="color: var(--text-muted);">Current Patient</span>
+                                <strong style="color: var(--accent);">Samwise G. (MRN-9281)</strong>
+                            </div>
+                            
+                            <div class="cohort-stats" style="margin-top: 16px;">
+                                <div class="compare-row" style="padding-top:0;">
+                                    <span style="font-size: 13px; color: var(--text-muted);">Metric</span>
+                                    <span style="font-size: 13px; font-weight: 600;">Samwise</span>
+                                    <span style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Cohort Avg</span>
+                                </div>
+                                <div class="compare-row">
+                                    <span>Age</span>
+                                    <strong>68</strong>
+                                    <span style="color: var(--text-muted);">65 - 75</span>
+                                </div>
+                                <div class="compare-row">
+                                    <span>Blood Pressure</span>
+                                    <strong style="color: var(--danger);">145/90</strong>
+                                    <span style="color: var(--text-muted);">130/80</span>
+                                </div>
+                                <div class="compare-row">
+                                    <span>Lisinopril Dose</span>
+                                    <strong>20mg</strong>
+                                    <span style="color: var(--text-muted);">20mg</span>
+                                </div>
+                                <div class="compare-row" style="border-bottom: none;">
+                                    <span>Potassium (mEq/L)</span>
+                                    <strong style="color: var(--danger); font-size: 18px;">5.8</strong>
+                                    <span style="color: var(--text-muted);">4.2</span>
+                                </div>
+                            </div>
+
+                            <div style="background-color: var(--success-bg); border: 1px solid #a7f3d0; border-radius: 8px; padding: 16px; margin-top: 24px;">
+                                <h4 style="color: var(--success); font-size: 14px; margin-bottom: 8px;"><i class="fa-solid fa-arrow-trend-up"></i> Successful Interventions</h4>
+                                <p style="font-size: 13px; color: #065f46; margin: 0;">In 85% of cohort cases with this exact pattern, transitioning the patient to <strong>Amlodipine 5mg</strong> stabilized potassium levels within 14 days without blood pressure spikes.</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 style="font-size: 16px; margin-bottom: 24px;">Longitudinal Lab Trends: Potassium Levels (mEq/L)</h3>
+                            
+                            <div class="svg-chart-container">
+                                <svg width="100%" height="100%" viewBox="0 0 800 300" preserveAspectRatio="none">
+                                    <line x1="0" y1="50" x2="800" y2="50" stroke="var(--border)" stroke-dasharray="4 4" />
+                                    <line x1="0" y1="125" x2="800" y2="125" stroke="var(--border)" stroke-dasharray="4 4" />
+                                    <line x1="0" y1="200" x2="800" y2="200" stroke="var(--border)" stroke-dasharray="4 4" />
+                                    <line x1="0" y1="275" x2="800" y2="275" stroke="var(--border)" />
+                                    
+                                    <text x="10" y="45" fill="var(--text-muted)" font-size="12">6.0 High</text>
+                                    <text x="10" y="120" fill="var(--text-muted)" font-size="12">5.0</text>
+                                    <text x="10" y="195" fill="var(--text-muted)" font-size="12">4.0 Normal</text>
+
+                                    <path d="M 50 190 L 250 185 L 450 195 L 650 180 L 780 185 L 780 275 L 50 275 Z" fill="var(--border)" opacity="0.3"/>
+                                    <polyline points="50,190 250,185 450,195 650,180 780,185" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="5 5" />
+                                    
+                                    <defs>
+                                        <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                                            <stop offset="60%" stop-color="var(--accent)" />
+                                            <stop offset="100%" stop-color="var(--danger)" />
+                                        </linearGradient>
+                                    </defs>
+                                    <polyline points="50,180 250,170 450,140 650,80 780,60" fill="none" stroke="url(#lineGrad)" stroke-width="4" stroke-linecap="round" />
+                                    
+                                    <circle cx="50" cy="180" r="5" fill="var(--accent)" />
+                                    <circle cx="250" cy="170" r="5" fill="var(--accent)" />
+                                    <circle cx="450" cy="140" r="5" fill="var(--accent)" />
+                                    <circle cx="650" cy="80" r="5" fill="var(--danger)" />
+                                    <circle cx="780" cy="60" r="7" fill="var(--danger)" stroke="white" stroke-width="2" />
+                                    
+                                    <text x="50" y="295" fill="var(--text-muted)" font-size="12" text-anchor="middle">12 Months Ago</text>
+                                    <text x="250" y="295" fill="var(--text-muted)" font-size="12" text-anchor="middle">9 Months</text>
+                                    <text x="450" y="295" fill="var(--text-muted)" font-size="12" text-anchor="middle">6 Months</text>
+                                    <text x="650" y="295" fill="var(--text-muted)" font-size="12" text-anchor="middle">3 Months</text>
+                                    <text x="780" y="295" fill="var(--danger)" font-weight="bold" font-size="12" text-anchor="middle">Today</text>
+                                </svg>
+                            </div>
+                            
+                            <div style="display: flex; gap: 24px; justify-content: center; border-top: 1px solid var(--border); padding-top: 16px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 16px; height: 4px; background: var(--accent); border-radius: 2px;"></div>
+                                    <span style="font-size: 13px; color: var(--text-main);">Samwise Gamgee</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 16px; height: 4px; border-top: 2px dashed var(--text-muted);"></div>
+                                    <span style="font-size: 13px; color: var(--text-muted);">Cohort Average</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="agenda-view" class="view-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h1 class="view-title" style="margin: 0;">Schedule</h1>
+                        
+                        <div class="view-toggle-group">
+                            <button class="view-toggle-btn active" id="btn-day-view" onclick="toggleAgendaView('day')">Day</button>
+                            <button class="view-toggle-btn" id="btn-week-view" onclick="toggleAgendaView('week')">Week</button>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary"><i class="fa-solid fa-chevron-left"></i></button>
+                            <button class="btn btn-secondary" style="font-weight: 600;">Today (Friday, April 3)</button>
+                            <button class="btn btn-secondary"><i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="card" id="agenda-day-wrapper" style="max-width: 800px; display: block;">
+                        <div class="timeline-container">
+                            <div class="timeline-event">
+                                <div class="event-time">08:00 AM - 08:45 AM</div>
+                                <div class="card" style="padding: 16px; background-color: var(--bg-app); box-shadow: none;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong style="color: var(--text-muted);">Sarah Jenkins</strong>
+                                        <span class="badge" style="background: #e2e8f0; color: var(--text-muted);">Completed</span>
+                                    </div>
+                                    <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Telehealth Follow-up</p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event active">
+                                <div class="event-time" style="color: var(--accent);">09:00 AM - 09:45 AM</div>
+                                <div class="card" style="padding: 16px; border-color: var(--accent-light); box-shadow: 0 0 0 2px var(--accent-light);">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong style="color: var(--primary);">Samwise Gamgee</strong>
+                                        <span class="badge danger">Urgent Consult</span>
+                                    </div>
+                                    <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">In-person • Lab Result Review • Room B</p>
+                                    <div style="margin-top: 12px;">
+                                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="goToPatientDetail()">Open Workspace</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-time">10:00 AM - 10:45 AM</div>
+                                <div class="card" style="padding: 16px; box-shadow: none;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong style="color: var(--primary);">Robert Taylor</strong>
+                                        <span class="badge" style="background: var(--bg-app); border: 1px solid var(--border);">Scheduled</span>
+                                    </div>
+                                    <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Standard Checkup</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-event">
+                                <div class="event-time">11:00 AM - 11:30 AM</div>
+                                <div class="card" style="padding: 16px; box-shadow: none;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong style="color: var(--primary);">William Harris</strong>
+                                        <span class="badge" style="background: var(--bg-app); border: 1px solid var(--border);">Scheduled</span>
+                                    </div>
+                                    <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Lab Results Review</p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-time">12:00 PM - 01:00 PM</div>
+                                <div class="card" style="padding: 16px; box-shadow: none; border-style: dashed; background: transparent;">
+                                    <strong style="color: var(--text-muted);"><i class="fa-solid fa-mug-hot"></i> Lunch Break</strong>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-time">01:00 PM - 01:45 PM</div>
+                                <div class="card" style="padding: 16px; box-shadow: none;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong style="color: var(--primary);">Arthur Pendelton</strong>
+                                        <span class="badge" style="background: var(--bg-app); border: 1px solid var(--border);">Scheduled</span>
+                                    </div>
+                                    <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Annual Wellness Visit</p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-time">02:00 PM - 02:45 PM</div>
+                                <div class="card" style="padding: 16px; box-shadow: none; border-left: 4px solid var(--outreach);">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <strong style="color: var(--primary);">Eleanor Rigby</strong>
+                                        <span class="badge outreach">Care Gap Outreach</span>
+                                    </div>
+                                    <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Follow-up from Population Health Campaign</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="agenda-week-wrapper" style="display: none; padding: 0;">
+                        <div class="week-calendar-grid">
+                            <div class="cal-header-cell" style="background: transparent; border-bottom: 1px solid var(--border);"></div>
+                            <div class="cal-header-cell">Mon 3/30</div>
+                            <div class="cal-header-cell">Tue 3/31</div>
+                            <div class="cal-header-cell">Wed 4/1</div>
+                            <div class="cal-header-cell">Thu 4/2</div>
+                            <div class="cal-header-cell" style="background: var(--accent-light); color: var(--accent);">Fri 4/3</div>
+
+                            <div class="cal-time-cell">08:00 AM</div>
+                            <div class="cal-day-cell"><div class="cal-event completed">J. Doe</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">L. Carter</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">M. Smith</div></div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell" style="background: var(--bg-app);"><div class="cal-event completed">S. Jenkins</div></div>
+
+                            <div class="cal-time-cell">09:00 AM</div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">T. Barnes</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">A. Davis</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">K. Lewis</div></div>
+                            <div class="cal-day-cell" style="background: var(--bg-app);"><div class="cal-event urgent" onclick="goToPatientDetail()">S. Gamgee</div></div>
+
+                            <div class="cal-time-cell">10:00 AM</div>
+                            <div class="cal-day-cell"><div class="cal-event completed">L. King</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">F. Lopez</div></div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">P. Scott</div></div>
+                            <div class="cal-day-cell" style="background: var(--bg-app);">
+                                <div class="cal-event">R. Taylor</div>
+                            </div>
+
+                            <div class="cal-time-cell">11:00 AM</div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">H. Green</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">C. Adams</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">D. Clark</div></div>
+                            <div class="cal-day-cell" style="background: var(--bg-app);"><div class="cal-event">W. Harris</div></div>
+
+                            <div class="cal-time-cell">12:00 PM</div>
+                            <div class="cal-day-cell" style="background: repeating-linear-gradient(45deg, var(--bg-app), var(--bg-app) 10px, var(--surface) 10px, var(--surface) 20px);"></div>
+                            <div class="cal-day-cell" style="background: repeating-linear-gradient(45deg, var(--bg-app), var(--bg-app) 10px, var(--surface) 10px, var(--surface) 20px);"></div>
+                            <div class="cal-day-cell" style="background: repeating-linear-gradient(45deg, var(--bg-app), var(--bg-app) 10px, var(--surface) 10px, var(--surface) 20px);"></div>
+                            <div class="cal-day-cell" style="background: repeating-linear-gradient(45deg, var(--bg-app), var(--bg-app) 10px, var(--surface) 10px, var(--surface) 20px);"></div>
+                            <div class="cal-day-cell" style="background: repeating-linear-gradient(45deg, var(--bg-app), var(--bg-app) 10px, var(--surface) 10px, var(--surface) 20px);"></div>
+
+                            <div class="cal-time-cell">01:00 PM</div>
+                            <div class="cal-day-cell"><div class="cal-event completed">M. Stewart</div></div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">J. Gordon</div></div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell" style="background: var(--bg-app);"><div class="cal-event">A. Pendelton</div></div>
+
+                            <div class="cal-time-cell">02:00 PM</div>
+                            <div class="cal-day-cell"><div class="cal-event completed">B. Wayne</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">C. Kent</div></div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">P. Parker</div></div>
+                            <div class="cal-day-cell" style="background: var(--bg-app);"><div class="cal-event outreach">E. Rigby</div></div>
+                            
+                            <div class="cal-time-cell">03:00 PM</div>
+                            <div class="cal-day-cell"></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">S. Rogers</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">T. Stark</div></div>
+                            <div class="cal-day-cell"><div class="cal-event completed">N. Romanoff</div></div>
+                            <div class="cal-day-cell" style="background: var(--bg-app);"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="population-health-view" class="view-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h1 class="view-title" style="margin: 0;">Population Health & Care Gaps</h1>
+                        <button class="btn btn-secondary"><i class="fa-solid fa-download"></i> Export Outreach Report</button>
+                    </div>
+
+                    <div class="pop-health-grid">
+                        <div class="card" style="grid-column: span 5; padding: 20px;">
+                            <h3 style="font-size: 16px; margin-bottom: 16px; color: var(--primary);">Active Outreach Campaigns</h3>
+                            
+                            <div class="campaign-card active-campaign">
+                                <div style="flex-grow: 1;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                        <strong style="color: var(--primary);">Overdue Routine Checks</strong>
+                                        <span class="badge outreach">14 Actionable</span>
+                                    </div>
+                                    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">BP, HbA1c, or general wellness visits &gt; 6mo overdue.</p>
+                                    <div class="progress-bar-bg">
+                                        <div class="progress-bar-fill" style="width: 25%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-card">
+                                <div style="flex-grow: 1;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                        <strong style="color: var(--text-main);">Influenza Vaccination 2026</strong>
+                                        <span class="badge" style="background: var(--bg-app); border: 1px solid var(--border);">45 Actionable</span>
+                                    </div>
+                                    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Target: Patients over 65 or immunocompromised.</p>
+                                    <div class="progress-bar-bg">
+                                        <div class="progress-bar-fill" style="width: 60%; background-color: var(--success);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 12px; border-style: dashed;"><i class="fa-solid fa-plus"></i> Create Custom Rule</button>
+                        </div>
+
+                        <div class="card" style="grid-column: span 7; padding: 0; overflow: hidden;">
+                            <div style="padding: 20px 24px; border-bottom: 1px solid var(--border); background-color: var(--bg-app); display: flex; justify-content: space-between; align-items: center;">
+                                <h3 style="font-size: 16px; margin: 0;">Call List: Overdue Routine Checks</h3>
+                                <button class="btn btn-primary" style="font-size: 12px; padding: 6px 12px; background-color: var(--outreach); border-color: var(--outreach);">Bulk Send SMS Reminders</button>
+                            </div>
+                            
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Identified Gap</th>
+                                        <th>Risk Lvl</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong style="color: var(--primary); display: block;">Robert Taylor</strong>
+                                            <span style="font-size: 12px; color: var(--text-muted);">DOB: 11/15/1960 • (555) 987-6543</span>
+                                        </td>
+                                        <td><span class="badge outreach">BP Check Due</span><br><span style="font-size: 12px; color: var(--text-muted);">Last visit: Oct 2025</span></td>
+                                        <td><span style="color: var(--warning);"><i class="fa-solid fa-circle"></i> Med</span></td>
+                                        <td><button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;">Log Call</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong style="color: var(--primary); display: block;">Jane Doe</strong>
+                                            <span style="font-size: 12px; color: var(--text-muted);">DOB: 05/12/1982 • (555) 234-5678</span>
+                                        </td>
+                                        <td><span class="badge outreach">HbA1c Due</span><br><span style="font-size: 12px; color: var(--text-muted);">Last test: Aug 2025</span></td>
+                                        <td><span style="color: var(--danger);"><i class="fa-solid fa-circle"></i> High</span></td>
+                                        <td><button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;">Log Call</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong style="color: var(--primary); display: block;">Eleanor Rigby</strong>
+                                            <span style="font-size: 12px; color: var(--text-muted);">DOB: 08/22/1950 • (555) 555-1234</span>
+                                        </td>
+                                        <td><span class="badge outreach">Annual Wellness</span><br><span style="font-size: 12px; color: var(--text-muted);">Overdue by 3 mos.</span></td>
+                                        <td><span style="color: var(--warning);"><i class="fa-solid fa-circle"></i> Med</span></td>
+                                        <td><button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;">Log Call</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div> </main>
+    </div>
+
+    <script>
+        // 1. Handle Login Transition
+        function login() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+        }
+        
+        // 2. Switch Views
+        function switchView(viewId, navElement = null) {
+            const views = document.querySelectorAll('.view-panel');
+            views.forEach(view => view.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            if (navElement) {
+                navElement.classList.add('active');
+            } else {
+                if(viewId === 'dashboard-view') navItems[0].classList.add('active');
+                if(viewId === 'patients-view' || viewId === 'patient-detail-view' || viewId === 'comparison-view') navItems[1].classList.add('active');
+                if(viewId === 'agenda-view') navItems[2].classList.add('active');
+                if(viewId === 'population-health-view') navItems[3].classList.add('active');
+            }
+            document.querySelector('.content-scroll').scrollTop = 0;
+        }
+
+        // 3. Navigation Helpers
+        function goToPatientDetail() {
+            switchView('patient-detail-view');
+            document.activeElement.blur(); 
+        }
+
+        function goToComparisonView() {
+            switchView('comparison-view');
+        }
+
+        // 4. Toggle Details
+        function togglePatientDetails() {
+            const details = document.getElementById('patient-expanded-details');
+            const btn = document.getElementById('btn-toggle-details');
+            
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+                btn.innerHTML = 'Show Details <i class="fa-solid fa-chevron-down" style="margin-left: 4px;"></i>';
+            } else {
+                details.style.display = 'block';
+                btn.innerHTML = 'Hide Details <i class="fa-solid fa-chevron-up" style="margin-left: 4px;"></i>';
+            }
+        }
+
+        // 5. Toggle Agenda Day/Week
+        function toggleAgendaView(mode) {
+            const dayWrapper = document.getElementById('agenda-day-wrapper');
+            const weekWrapper = document.getElementById('agenda-week-wrapper');
+            const btnDay = document.getElementById('btn-day-view');
+            const btnWeek = document.getElementById('btn-week-view');
+
+            if (mode === 'day') {
+                dayWrapper.style.display = 'block';
+                weekWrapper.style.display = 'none';
+                btnDay.classList.add('active');
+                btnWeek.classList.remove('active');
+            } else {
+                dayWrapper.style.display = 'none';
+                weekWrapper.style.display = 'block';
+                btnDay.classList.remove('active');
+                btnWeek.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

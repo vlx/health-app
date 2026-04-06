@@ -1,0 +1,1477 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F0EEE9;
+    --surface: #FAFAF8;
+    --surface2: #F4F2ED;
+    --border: rgba(0,0,0,0.09);
+    --border-med: rgba(0,0,0,0.15);
+    --text: #1A1A18;
+    --text2: #6B6B67;
+    --text3: #9E9E99;
+    --accent: #185FA5;
+    --accent-bg: #E6F1FB;
+    --accent-text: #0C447C;
+    --success: #3B6D11;
+    --success-bg: #EAF3DE;
+    --warn: #854F0B;
+    --warn-bg: #FAEEDA;
+    --danger: #A32D2D;
+    --danger-bg: #FCEBEB;
+    --teal: #0F6E56;
+    --teal-bg: #E1F5EE;
+    --purple: #534AB7;
+    --purple-bg: #EEEDFE;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 2rem 1rem;
+  }
+
+  .screens-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .screen-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 0.75rem;
+  }
+
+  .screen {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 0.5px solid var(--border-med);
+    overflow: hidden;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 1.5rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .avatar-sm {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--purple-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; color: var(--purple);
+  }
+  .badge-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--danger);
+    margin-left: -6px;
+    margin-top: -14px;
+    border: 1.5px solid var(--surface);
+  }
+
+  /* SIDEBAR */
+  .app-layout {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    min-height: 520px;
+  }
+  .sidebar {
+    background: var(--surface2);
+    border-right: 0.5px solid var(--border);
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text3);
+    font-size: 16px;
+    transition: background 0.15s;
+  }
+  .nav-icon.active {
+    background: var(--accent-bg);
+    color: var(--accent);
+  }
+  .nav-icon svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+  .main-content {
+    padding: 1.25rem 1.5rem;
+    overflow: hidden;
+  }
+
+  /* =================== SCREEN 1: LOGIN =================== */
+  .login-screen {
+    min-height: 560px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .login-left {
+    background: #185FA5;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .login-logo {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .login-logo-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.55);
+  }
+  .login-hero {
+    color: #fff;
+  }
+  .login-hero h2 {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+  .login-hero p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    max-width: 240px;
+  }
+  .login-stat-row {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .login-stat {
+    color: #fff;
+  }
+  .login-stat .num {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .login-stat .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+  }
+  .login-right {
+    background: var(--surface);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .login-right h3 {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+  .login-right .sub {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 2rem;
+  }
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  .form-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .form-input {
+    width: 100%;
+    height: 38px;
+    border: 0.5px solid var(--border-med);
+    border-radius: 8px;
+    background: var(--surface2);
+    padding: 0 12px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    outline: none;
+  }
+  .form-input.filled {
+    background: var(--surface);
+    border-color: var(--border-med);
+  }
+  .pw-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .forgot {
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .btn-primary {
+    width: 100%;
+    height: 38px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    margin-top: 0.25rem;
+  }
+  .divider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 1.25rem 0;
+  }
+  .divider-line { flex: 1; height: 0.5px; background: var(--border); }
+  .divider-text { font-size: 11px; color: var(--text3); }
+  .sso-btn {
+    width: 100%;
+    height: 38px;
+    background: transparent;
+    border: 0.5px solid var(--border-med);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .mfa-hint {
+    margin-top: 1.5rem;
+    background: var(--accent-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--accent-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* =================== SCREEN 2: DASHBOARD =================== */
+  .dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+  }
+  .dash-header h2 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .dash-header .date {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+  .metric-card {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .metric-card .m-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  .metric-card .m-value {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .metric-card .m-sub {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  .m-up { color: var(--success); }
+  .m-down { color: var(--danger); }
+
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 1rem;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+  .panel-action {
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+  }
+
+  .appt-list { padding: 0; }
+  .appt-item {
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+  .appt-item:last-child { border-bottom: none; }
+  .appt-time {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+  .appt-info .name {
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .appt-info .reason {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 1px;
+  }
+  .status-pill {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+  .s-arrived { background: var(--teal-bg); color: var(--teal); }
+  .s-waiting { background: var(--warn-bg); color: var(--warn); }
+  .s-exam { background: var(--accent-bg); color: var(--accent-text); }
+  .s-labs { background: var(--purple-bg); color: var(--purple); }
+  .s-upcoming { background: var(--surface2); color: var(--text3); }
+
+  .alerts-panel { }
+  .alert-item {
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .alert-item:last-child { border-bottom: none; }
+  .alert-icon {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  .ai-danger { background: var(--danger-bg); }
+  .ai-warn { background: var(--warn-bg); }
+  .ai-info { background: var(--accent-bg); }
+  .alert-body .a-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .alert-body .a-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  /* =================== SCREEN 3: PATIENT LIST =================== */
+  .patients-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 1rem;
+    min-height: 480px;
+  }
+  .filter-sidebar {
+    border-right: 0.5px solid var(--border);
+    padding: 0 1rem 1rem 0;
+  }
+  .filter-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 10px;
+  }
+  .filter-section { margin-bottom: 1.25rem; }
+  .filter-section-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .filter-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    margin-bottom: 2px;
+  }
+  .filter-option:hover { background: var(--surface2); }
+  .filter-option.selected {
+    background: var(--accent-bg);
+    color: var(--accent-text);
+    font-weight: 500;
+  }
+  .filter-count {
+    font-size: 10px;
+    color: var(--text3);
+    background: var(--surface2);
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+  .filter-option.selected .filter-count {
+    background: rgba(24,95,165,0.15);
+    color: var(--accent);
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 0.5px solid var(--border-med);
+    border-radius: 8px;
+    padding: 0 12px;
+    height: 36px;
+    margin-bottom: 1rem;
+  }
+  .search-bar svg { width: 14px; height: 14px; color: var(--text3); flex-shrink: 0; }
+  .search-bar span { font-size: 13px; color: var(--text3); }
+
+  .patient-table { width: 100%; }
+  .pt-head {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 4px;
+  }
+  .pt-head span {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .pt-row {
+    display: grid;
+    grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr;
+    padding: 9px 0;
+    border-bottom: 0.5px solid var(--border);
+    align-items: center;
+    cursor: pointer;
+  }
+  .pt-row:last-child { border-bottom: none; }
+  .pt-row:hover { background: var(--surface2); margin: 0 -1rem; padding: 9px 1rem; border-radius: 6px; }
+  .pt-name-cell { display: flex; align-items: center; gap: 10px; }
+  .avatar-xs {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 500; flex-shrink: 0;
+  }
+  .av-blue { background: var(--accent-bg); color: var(--accent-text); }
+  .av-teal { background: var(--teal-bg); color: var(--teal); }
+  .av-purple { background: var(--purple-bg); color: var(--purple); }
+  .av-warn { background: var(--warn-bg); color: var(--warn); }
+  .av-danger { background: var(--danger-bg); color: var(--danger); }
+  .pt-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .pt-mrn { font-size: 11px; color: var(--text3); margin-top: 1px; }
+  .pt-cell { font-size: 12px; color: var(--text2); }
+  .pt-flag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 500;
+    padding: 2px 7px; border-radius: 20px;
+  }
+
+  /* =================== SCREEN 4: PATIENT DETAIL =================== */
+  .detail-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 1rem;
+    min-height: 520px;
+  }
+  .detail-sidebar {
+    padding: 0 1rem 1rem 0;
+    border-right: 0.5px solid var(--border);
+  }
+  .patient-card {
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+  .patient-avatar-lg {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: var(--teal-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 500; color: var(--teal);
+    margin: 0 auto 10px;
+  }
+  .patient-card .p-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .patient-card .p-mrn {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+  .risk-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 500;
+    padding: 3px 9px; border-radius: 20px;
+    margin-top: 8px;
+  }
+  .info-block { margin-bottom: 1rem; }
+  .info-block-title {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    gap: 8px;
+  }
+  .info-row .key {
+    font-size: 11px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+  .info-row .val {
+    font-size: 11px;
+    color: var(--text);
+    font-weight: 500;
+    text-align: right;
+  }
+  .detail-main { }
+  .detail-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1rem;
+    border-bottom: 0.5px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 12px;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    color: var(--text3);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -0.5px;
+  }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .detail-card {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .detail-card .dc-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+  .vital-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    align-items: center;
+  }
+  .vital-row .vk { font-size: 12px; color: var(--text2); }
+  .vital-row .vv { font-size: 13px; font-weight: 500; color: var(--text); font-family: 'DM Mono', monospace; }
+  .vv.abnormal { color: var(--danger); }
+  .vv.high { color: var(--warn); }
+
+  .timeline { }
+  .tl-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .tl-dot-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 18px;
+    flex-shrink: 0;
+  }
+  .tl-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .tl-line {
+    flex: 1;
+    width: 1px;
+    background: var(--border);
+    margin-top: 3px;
+  }
+  .tl-content { flex: 1; }
+  .tl-date { font-size: 10px; color: var(--text3); margin-bottom: 2px; font-family: 'DM Mono', monospace; }
+  .tl-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .tl-note { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+  .meds-list { }
+  .med-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+  }
+  .med-item:last-child { border-bottom: none; }
+  .med-name { font-weight: 500; color: var(--text); }
+  .med-dose { color: var(--text2); margin-top: 1px; font-size: 11px; }
+  .med-status { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 20px; }
+  .ms-active { background: var(--success-bg); color: var(--success); }
+  .ms-review { background: var(--warn-bg); color: var(--warn); }
+
+  .lab-sparkline {
+    margin-top: 8px;
+  }
+  .lab-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .lab-bar-label { font-size: 11px; color: var(--text2); width: 90px; flex-shrink: 0; }
+  .lab-bar-track {
+    flex: 1;
+    height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .lab-bar-fill { height: 100%; border-radius: 3px; }
+  .lab-val { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text); min-width: 36px; text-align: right; }
+
+  .note-area {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 10px;
+  }
+  .note-area .note-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  .note-area .note-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+    border: none;
+    background: transparent;
+    width: 100%;
+    resize: none;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    color: var(--text2);
+  }
+  .note-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 0.5px solid var(--border);
+  }
+  .note-btn {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 0.5px solid var(--border-med);
+    background: transparent;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .note-btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+
+  .sparkline-svg {
+    width: 100%;
+    height: 42px;
+    display: block;
+  }
+
+  .chip {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .chip-cond { background: var(--accent-bg); color: var(--accent-text); }
+  .chip-allergy { background: var(--danger-bg); color: var(--danger); }
+  .chip-flag { background: var(--warn-bg); color: var(--warn); }
+
+  .cds-alert {
+    background: var(--warn-bg);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--warn);
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .cds-alert .cds-icon { flex-shrink: 0; margin-top: 1px; }
+</style>
+
+<div class="screens-wrapper">
+
+  <!-- SCREEN 1: LOGIN -->
+  <div>
+    <div class="screen-label">01 — Sign in</div>
+    <div class="screen">
+      <div class="login-screen">
+        <div class="login-left">
+          <div class="login-logo">
+            <div class="login-logo-dot"></div>
+            Notill Co.
+          </div>
+          <div class="login-hero">
+            <h2>Clinical intelligence,<br>at your fingertips.</h2>
+            <p>The all-in-one platform for modern medical practices. Designed for speed, clarity, and continuity of care.</p>
+          </div>
+          <div class="login-stat-row">
+            <div class="login-stat">
+              <div class="num">12k+</div>
+              <div class="lbl">Practitioners</div>
+            </div>
+            <div class="login-stat">
+              <div class="num">98.7%</div>
+              <div class="lbl">Uptime SLA</div>
+            </div>
+            <div class="login-stat">
+              <div class="num">HIPAA</div>
+              <div class="lbl">Compliant</div>
+            </div>
+          </div>
+        </div>
+        <div class="login-right">
+          <h3>Welcome back</h3>
+          <p class="sub">Sign in to your practitioner account</p>
+          <div class="form-group">
+            <label class="form-label">Work email</label>
+            <input class="form-input filled" type="email" value="a.petrov@greenvalley.clinic" readonly />
+          </div>
+          <div class="form-group">
+            <div class="pw-row">
+              <label class="form-label" style="margin:0;">Password</label>
+              <span class="forgot">Forgot password?</span>
+            </div>
+            <input class="form-input" type="password" value="••••••••••" readonly />
+          </div>
+          <button class="btn-primary">Sign in</button>
+          <div class="divider-row">
+            <div class="divider-line"></div>
+            <span class="divider-text">or continue with</span>
+            <div class="divider-line"></div>
+          </div>
+          <button class="sso-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            Single sign-on (SSO)
+          </button>
+          <div class="mfa-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            A verification code will be sent to your registered device.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: DASHBOARD -->
+  <div>
+    <div class="screen-label">02 — Dashboard</div>
+    <div class="screen">
+      <div class="topbar">
+        <div class="logo"><div class="logo-dot"></div> Notill Co.</div>
+        <div class="topbar-right">
+          <svg width="17" height="17" fill="none" stroke="var(--text3)" stroke-width="1.6" viewBox="0 0 24 24" style="cursor:pointer;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div style="display:flex;align-items:flex-start;">
+            <svg width="17" height="17" fill="none" stroke="var(--danger)" stroke-width="1.6" viewBox="0 0 24 24" style="cursor:pointer;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <div class="badge-dot"></div>
+          </div>
+          <div class="avatar-sm">AP</div>
+        </div>
+      </div>
+      <div class="app-layout">
+        <div class="sidebar">
+          <div class="nav-icon active">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="nav-icon" style="margin-top:auto;">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M20 12h2M2 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41M12 20v2M12 2v2"/></svg>
+          </div>
+        </div>
+        <div class="main-content">
+          <div class="dash-header">
+            <div>
+              <h2>Good morning, Dr. Petrov</h2>
+              <div class="date">Friday, 3 April 2026 · Green Valley Clinic</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="background:var(--danger-bg);color:var(--danger);font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                3 urgent alerts
+              </div>
+            </div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="m-label">Appointments today</div>
+              <div class="m-value">14</div>
+              <div class="m-sub m-up">↑ 2 vs yesterday</div>
+            </div>
+            <div class="metric-card">
+              <div class="m-label">Patients in-clinic</div>
+              <div class="m-value">6</div>
+              <div class="m-sub" style="color:var(--text3);">3 waiting · 3 with dr.</div>
+            </div>
+            <div class="metric-card">
+              <div class="m-label">Pending lab results</div>
+              <div class="m-value" style="color:var(--warn);">5</div>
+              <div class="m-sub m-down">2 flagged abnormal</div>
+            </div>
+            <div class="metric-card">
+              <div class="m-label">Notes to complete</div>
+              <div class="m-value">3</div>
+              <div class="m-sub" style="color:var(--text3);">From yesterday</div>
+            </div>
+          </div>
+          <div class="dash-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <span class="panel-title">Today's schedule</span>
+                <span class="panel-action">View full calendar</span>
+              </div>
+              <div class="appt-list">
+                <div class="appt-item">
+                  <div class="appt-time">09:00</div>
+                  <div class="appt-info">
+                    <div class="name">Samwise Gardner</div>
+                    <div class="reason">Hypertension follow-up · 3-month review</div>
+                  </div>
+                  <div class="status-pill s-arrived">Arrived</div>
+                </div>
+                <div class="appt-item">
+                  <div class="appt-time">09:30</div>
+                  <div class="appt-info">
+                    <div class="name">Elena Marchetti</div>
+                    <div class="reason">Annual physical exam</div>
+                  </div>
+                  <div class="status-pill s-exam">In exam</div>
+                </div>
+                <div class="appt-item">
+                  <div class="appt-time">10:00</div>
+                  <div class="appt-info">
+                    <div class="name">Robert Osei</div>
+                    <div class="reason">CBC · Results review</div>
+                  </div>
+                  <div class="status-pill s-labs">Pending labs</div>
+                </div>
+                <div class="appt-item">
+                  <div class="appt-time">10:30</div>
+                  <div class="appt-info">
+                    <div class="name">Miriam Sokol</div>
+                    <div class="reason">Chest pain · First consultation</div>
+                  </div>
+                  <div class="status-pill s-waiting">Waiting</div>
+                </div>
+                <div class="appt-item">
+                  <div class="appt-time">11:15</div>
+                  <div class="appt-info">
+                    <div class="name">Jakub Horak</div>
+                    <div class="reason">Diabetes management · Quarterly</div>
+                  </div>
+                  <div class="status-pill s-upcoming">Upcoming</div>
+                </div>
+                <div class="appt-item">
+                  <div class="appt-time">14:00</div>
+                  <div class="appt-info">
+                    <div class="name">Yuki Tanaka</div>
+                    <div class="reason">Post-procedure review</div>
+                  </div>
+                  <div class="status-pill s-upcoming">Upcoming</div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="panel alerts-panel">
+                <div class="panel-header">
+                  <span class="panel-title">Alerts</span>
+                  <span class="panel-action">All alerts</span>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-icon ai-danger">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  </div>
+                  <div class="alert-body">
+                    <div class="a-title">Critical K⁺ — R. Osei</div>
+                    <div class="a-sub">Potassium 6.1 mEq/L · 08:41</div>
+                  </div>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-icon ai-danger">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <div class="alert-body">
+                    <div class="a-title">Drug interaction — S. Gardner</div>
+                    <div class="a-sub">Lisinopril + new supplement · Review</div>
+                  </div>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-icon ai-warn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div class="alert-body">
+                    <div class="a-title">Overdue note — J. Horak</div>
+                    <div class="a-sub">Visit 1 Apr · Not signed off</div>
+                  </div>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-icon ai-info">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div class="alert-body">
+                    <div class="a-title">Radiology report ready</div>
+                    <div class="a-sub">M. Sokol · Chest X-ray</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: PATIENT LIST -->
+  <div>
+    <div class="screen-label">03 — Patient list</div>
+    <div class="screen">
+      <div class="topbar">
+        <div class="logo"><div class="logo-dot"></div> Notill Co.</div>
+        <div class="topbar-right">
+          <div style="font-size:12px;color:var(--text2);">Dr. A. Petrov</div>
+          <div class="avatar-sm">AP</div>
+        </div>
+      </div>
+      <div class="app-layout">
+        <div class="sidebar">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <div class="nav-icon active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+        </div>
+        <div class="main-content">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+            <div>
+              <div style="font-size:15px;font-weight:500;letter-spacing:-0.01em;">Patients</div>
+              <div style="font-size:12px;color:var(--text3);margin-top:2px;">248 total · 14 seen today</div>
+            </div>
+            <button style="font-size:12px;font-weight:500;padding:6px 14px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">+ Register patient</button>
+          </div>
+          <div class="patients-layout">
+            <div class="filter-sidebar">
+              <div class="filter-title">Filters</div>
+              <div class="search-bar">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <span>Search name, MRN, DOB…</span>
+              </div>
+              <div class="filter-section">
+                <div class="filter-section-label">Status</div>
+                <div class="filter-option selected">All patients <span class="filter-count">248</span></div>
+                <div class="filter-option">Active <span class="filter-count">186</span></div>
+                <div class="filter-option">Seen today <span class="filter-count">14</span></div>
+                <div class="filter-option">Pending labs <span class="filter-count">5</span></div>
+              </div>
+              <div class="filter-section">
+                <div class="filter-section-label">Condition</div>
+                <div class="filter-option">Hypertension <span class="filter-count">43</span></div>
+                <div class="filter-option">Diabetes T2 <span class="filter-count">31</span></div>
+                <div class="filter-option">Cardiac <span class="filter-count">18</span></div>
+                <div class="filter-option">Respiratory <span class="filter-count">22</span></div>
+                <div class="filter-option">Other <span class="filter-count">134</span></div>
+              </div>
+              <div class="filter-section">
+                <div class="filter-section-label">Risk level</div>
+                <div class="filter-option">
+                  <span style="display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--danger);display:inline-block;"></span>High</span>
+                  <span class="filter-count">29</span>
+                </div>
+                <div class="filter-option">
+                  <span style="display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--warn);display:inline-block;"></span>Medium</span>
+                  <span class="filter-count">71</span>
+                </div>
+                <div class="filter-option">
+                  <span style="display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block;"></span>Low</span>
+                  <span class="filter-count">148</span>
+                </div>
+              </div>
+              <div class="filter-section">
+                <div class="filter-section-label">Last visit</div>
+                <div class="filter-option">This week <span class="filter-count">37</span></div>
+                <div class="filter-option">This month <span class="filter-count">94</span></div>
+                <div class="filter-option">30–90 days <span class="filter-count">86</span></div>
+                <div class="filter-option">Over 90 days <span class="filter-count">31</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="pt-head">
+                <span>Patient</span>
+                <span>Diagnosis</span>
+                <span>Last visit</span>
+                <span>Risk</span>
+                <span>Status</span>
+              </div>
+              <div class="pt-row">
+                <div class="pt-name-cell">
+                  <div class="avatar-xs av-teal">SG</div>
+                  <div>
+                    <div class="pt-name">Samwise Gardner</div>
+                    <div class="pt-mrn">MRN-004821</div>
+                  </div>
+                </div>
+                <div class="pt-cell">Hypertension</div>
+                <div class="pt-cell">Today</div>
+                <div><span class="pt-flag" style="background:var(--warn-bg);color:var(--warn);">Medium</span></div>
+                <div><span class="status-pill s-arrived">Arrived</span></div>
+              </div>
+              <div class="pt-row">
+                <div class="pt-name-cell">
+                  <div class="avatar-xs av-blue">EM</div>
+                  <div>
+                    <div class="pt-name">Elena Marchetti</div>
+                    <div class="pt-mrn">MRN-007334</div>
+                  </div>
+                </div>
+                <div class="pt-cell">Annual physical</div>
+                <div class="pt-cell">Today</div>
+                <div><span class="pt-flag" style="background:var(--success-bg);color:var(--success);">Low</span></div>
+                <div><span class="status-pill s-exam">In exam</span></div>
+              </div>
+              <div class="pt-row">
+                <div class="pt-name-cell">
+                  <div class="avatar-xs av-danger">RO</div>
+                  <div>
+                    <div class="pt-name">Robert Osei</div>
+                    <div class="pt-mrn">MRN-002219</div>
+                  </div>
+                </div>
+                <div class="pt-cell">Renal impairment</div>
+                <div class="pt-cell">Today</div>
+                <div><span class="pt-flag" style="background:var(--danger-bg);color:var(--danger);">High</span></div>
+                <div><span class="status-pill s-labs">Pending labs</span></div>
+              </div>
+              <div class="pt-row">
+                <div class="pt-name-cell">
+                  <div class="avatar-xs av-warn">JH</div>
+                  <div>
+                    <div class="pt-name">Jakub Horak</div>
+                    <div class="pt-mrn">MRN-009901</div>
+                  </div>
+                </div>
+                <div class="pt-cell">Diabetes T2</div>
+                <div class="pt-cell">1 Apr 2026</div>
+                <div><span class="pt-flag" style="background:var(--warn-bg);color:var(--warn);">Medium</span></div>
+                <div><span class="status-pill s-upcoming">Upcoming</span></div>
+              </div>
+              <div class="pt-row">
+                <div class="pt-name-cell">
+                  <div class="avatar-xs av-purple">MS</div>
+                  <div>
+                    <div class="pt-name">Miriam Sokol</div>
+                    <div class="pt-mrn">MRN-011045</div>
+                  </div>
+                </div>
+                <div class="pt-cell">Chest pain — TBD</div>
+                <div class="pt-cell">Today</div>
+                <div><span class="pt-flag" style="background:var(--danger-bg);color:var(--danger);">High</span></div>
+                <div><span class="status-pill s-waiting">Waiting</span></div>
+              </div>
+              <div class="pt-row">
+                <div class="pt-name-cell">
+                  <div class="avatar-xs av-teal">YT</div>
+                  <div>
+                    <div class="pt-name">Yuki Tanaka</div>
+                    <div class="pt-mrn">MRN-006672</div>
+                  </div>
+                </div>
+                <div class="pt-cell">Post-operative</div>
+                <div class="pt-cell">28 Mar 2026</div>
+                <div><span class="pt-flag" style="background:var(--success-bg);color:var(--success);">Low</span></div>
+                <div><span class="status-pill s-upcoming">Upcoming</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: PATIENT DETAIL -->
+  <div>
+    <div class="screen-label">04 — Patient detail</div>
+    <div class="screen">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="logo"><div class="logo-dot"></div> Notill Co.</div>
+          <svg width="14" height="14" fill="none" stroke="var(--text3)" stroke-width="1.6" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          <span style="font-size:13px;color:var(--text2);">Patients</span>
+          <svg width="14" height="14" fill="none" stroke="var(--text3)" stroke-width="1.6" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          <span style="font-size:13px;color:var(--text);font-weight:500;">Samwise Gardner</span>
+        </div>
+        <div class="topbar-right">
+          <div style="display:flex;gap:6px;">
+            <button style="font-size:11px;padding:5px 10px;border-radius:6px;background:transparent;border:0.5px solid var(--border-med);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;">+ New note</button>
+            <button style="font-size:11px;padding:5px 10px;border-radius:6px;background:transparent;border:0.5px solid var(--border-med);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;">Order lab</button>
+            <button style="font-size:11px;padding:5px 10px;border-radius:6px;background:var(--accent);border:none;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;">Prescribe</button>
+          </div>
+          <div class="avatar-sm">AP</div>
+        </div>
+      </div>
+      <div class="app-layout">
+        <div class="sidebar">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <div class="nav-icon active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+        </div>
+        <div class="main-content">
+          <div class="detail-layout">
+            <!-- Detail Left Sidebar -->
+            <div class="detail-sidebar">
+              <div class="patient-card">
+                <div class="patient-avatar-lg">SG</div>
+                <div class="p-name">Samwise Gardner</div>
+                <div class="p-mrn">MRN-004821</div>
+                <div>
+                  <span class="risk-badge" style="background:var(--warn-bg);color:var(--warn);">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Medium risk
+                  </span>
+                </div>
+              </div>
+              <div style="border-top:0.5px solid var(--border);padding-top:1rem;">
+                <div class="info-block">
+                  <div class="info-block-title">Demographics</div>
+                  <div class="info-row"><span class="key">Date of birth</span><span class="val">12 Jun 1971</span></div>
+                  <div class="info-row"><span class="key">Age</span><span class="val">54 years</span></div>
+                  <div class="info-row"><span class="key">Sex</span><span class="val">Male</span></div>
+                  <div class="info-row"><span class="key">Blood type</span><span class="val">A+</span></div>
+                </div>
+                <div class="info-block">
+                  <div class="info-block-title">Contact</div>
+                  <div class="info-row"><span class="key">Phone</span><span class="val">+359 88 412 6731</span></div>
+                  <div class="info-row"><span class="key">Insurance</span><span class="val">NZOK · Active</span></div>
+                </div>
+                <div class="info-block">
+                  <div class="info-block-title">Conditions</div>
+                  <span class="chip chip-cond">Hypertension</span>
+                  <span class="chip chip-cond">Dyslipidemia</span>
+                </div>
+                <div class="info-block">
+                  <div class="info-block-title">Allergies</div>
+                  <span class="chip chip-allergy">Penicillin</span>
+                  <span class="chip chip-allergy">Sulfa drugs</span>
+                </div>
+                <div class="info-block">
+                  <div class="info-block-title">GP</div>
+                  <div class="info-row"><span class="key">Physician</span><span class="val">Dr. A. Petrov</span></div>
+                  <div class="info-row"><span class="key">Since</span><span class="val">Mar 2019</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- Detail Main -->
+            <div class="detail-main">
+              <div class="cds-alert">
+                <div class="cds-icon">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <div>CDS alert: Lisinopril + patient-reported magnesium supplement may potentiate hypotension. Review current BP trend before adjusting dose.</div>
+              </div>
+              <div class="detail-tabs">
+                <div class="tab active">Overview</div>
+                <div class="tab">Labs</div>
+                <div class="tab">Prescriptions</div>
+                <div class="tab">Documents</div>
+                <div class="tab">Notes</div>
+              </div>
+              <div class="detail-grid">
+                <div class="detail-card">
+                  <div class="dc-label">Latest vitals · 3 Apr 2026</div>
+                  <div class="vital-row"><span class="vk">Blood pressure</span><span class="vv high">148 / 94</span></div>
+                  <div class="vital-row"><span class="vk">Heart rate</span><span class="vv">76 bpm</span></div>
+                  <div class="vital-row"><span class="vk">Temperature</span><span class="vv">36.7 °C</span></div>
+                  <div class="vital-row"><span class="vk">O₂ saturation</span><span class="vv">98%</span></div>
+                  <div class="vital-row"><span class="vk">Weight</span><span class="vv">88 kg</span></div>
+                </div>
+                <div class="detail-card">
+                  <div class="dc-label">Lab trends · Key markers</div>
+                  <div class="lab-sparkline">
+                    <div class="lab-bar-row">
+                      <span class="lab-bar-label">Creatinine</span>
+                      <div class="lab-bar-track"><div class="lab-bar-fill" style="width:58%;background:#185FA5;"></div></div>
+                      <span class="lab-val">1.04</span>
+                    </div>
+                    <div class="lab-bar-row">
+                      <span class="lab-bar-label">Cholesterol</span>
+                      <div class="lab-bar-track"><div class="lab-bar-fill" style="width:72%;background:#EF9F27;"></div></div>
+                      <span class="lab-val">5.8 mmol</span>
+                    </div>
+                    <div class="lab-bar-row">
+                      <span class="lab-bar-label">HbA1c</span>
+                      <div class="lab-bar-track"><div class="lab-bar-fill" style="width:44%;background:#3B6D11;"></div></div>
+                      <span class="lab-val">5.4%</span>
+                    </div>
+                    <div class="lab-bar-row">
+                      <span class="lab-bar-label">eGFR</span>
+                      <div class="lab-bar-track"><div class="lab-bar-fill" style="width:82%;background:#185FA5;"></div></div>
+                      <span class="lab-val">81</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom:1rem;">
+                <div class="section-header">
+                  <span class="section-title">Medical timeline</span>
+                  <span style="font-size:11px;color:var(--accent);cursor:pointer;">Full timeline</span>
+                </div>
+                <div class="timeline">
+                  <div class="tl-item">
+                    <div class="tl-dot-col">
+                      <div class="tl-dot" style="background:var(--accent);"></div>
+                      <div class="tl-line"></div>
+                    </div>
+                    <div class="tl-content">
+                      <div class="tl-date">03 Apr 2026 · Today</div>
+                      <div class="tl-title">Follow-up consultation — Hypertension</div>
+                      <div class="tl-note">BP elevated at 148/94. Discussed supplement interaction. Considering dose adjustment pending lab review.</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot-col">
+                      <div class="tl-dot" style="background:var(--success);"></div>
+                      <div class="tl-line"></div>
+                    </div>
+                    <div class="tl-content">
+                      <div class="tl-date">10 Jan 2026</div>
+                      <div class="tl-title">Lipid panel + CBC — Normal</div>
+                      <div class="tl-note">Total cholesterol 5.8. LDL within target. No changes to statin regimen.</div>
+                    </div>
+                  </div>
+                  <div class="tl-item">
+                    <div class="tl-dot-col">
+                      <div class="tl-dot" style="background:var(--warn);"></div>
+                    </div>
+                    <div class="tl-content">
+                      <div class="tl-date">04 Oct 2025</div>
+                      <div class="tl-title">Prescription updated — Lisinopril 10mg → 20mg</div>
+                      <div class="tl-note">BP control suboptimal at 3-month review. Dose increased. Follow-up in 3 months.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="section-header">
+                  <span class="section-title">Active medications</span>
+                </div>
+                <div class="meds-list">
+                  <div class="med-item">
+                    <div>
+                      <div class="med-name">Lisinopril</div>
+                      <div class="med-dose">20 mg · once daily · oral</div>
+                    </div>
+                    <span class="med-status ms-review">Review needed</span>
+                  </div>
+                  <div class="med-item">
+                    <div>
+                      <div class="med-name">Atorvastatin</div>
+                      <div class="med-dose">40 mg · once at night · oral</div>
+                    </div>
+                    <span class="med-status ms-active">Active</span>
+                  </div>
+                  <div class="med-item">
+                    <div>
+                      <div class="med-name">Aspirin</div>
+                      <div class="med-dose">100 mg · once daily · oral</div>
+                    </div>
+                    <span class="med-status ms-active">Active</span>
+                  </div>
+                </div>
+              </div>
+              <div class="note-area">
+                <div class="note-label">Clinical note · 3 Apr 2026</div>
+                <textarea class="note-text" rows="3" readonly>Patient presents for 3-month hypertension follow-up. BP 148/94 — above target. Patient reports self-initiating magnesium supplement. Potential interaction with Lisinopril flagged. Ordering repeat electrolytes. Considering dose adjustment pending results.</textarea>
+                <div class="note-actions">
+                  <button class="note-btn">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="10 15 12 17 16 13"/><polyline points="10 9 12 11 16 7"/></svg>
+                    Voice-to-text
+                  </button>
+                  <button class="note-btn">AI summarise</button>
+                  <button class="note-btn primary">Sign &amp; save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
